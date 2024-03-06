@@ -60,12 +60,12 @@ class SideBarSetup:
         with st.sidebar:
             t = st.text_input("Team Number", "649", key = "teamname " + str(a), placeholder = "649")
         return t
-
-    #def tmyrIN(self, b, t):
-        #with st.sidebar:
-            #tmyrs = getTeamYears(t)
-            #tmy = st.selectbox("Which year do you want to check", tmyrs, key = "teamyrs " + str(b))
-        #return tmy
+"""
+    def tmyrIN(self, b, t):
+        with st.sidebar:
+            tmyrs = getTeamYears(t)
+            tmy = st.selectbox("Which year do you want to check", tmyrs, key = "teamyrs " + str(b))
+        return tmy
 
 def basicTeamBoxPlot(tmevscr):
     #Charts
@@ -140,3 +140,4 @@ with tab2:
             st.write('In %d, team %d won %d award: %s.' % (tmy, int(tm), len(awards), ", ".join('%s (%s)' % (award.name, award.event_key) for award in awards)))
         else:
             st.write('In %d, team %d won %d awards: %s.' % (tmy, int(tm), len(awards), ", ".join('%s (%s)' % (award.name, award.event_key) for award in awards)))
+"""
