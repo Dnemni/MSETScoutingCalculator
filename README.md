@@ -1,3 +1,3 @@
-# Scouting App Visualizer for Blue Alliance API
+# Scouting App Calculator
 
-Takes information from Blue Alliance and outputs match scores based on year and events. Creates and displays a boxplot from the data.
+Takes in scouting data and creates a table based on inputted requirements.
