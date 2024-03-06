@@ -1,4 +1,3 @@
 altair
 pandas
-tbapy
 streamlit

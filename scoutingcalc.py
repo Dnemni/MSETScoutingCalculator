@@ -2,7 +2,6 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
-import tbapy
 import datetime
 
 st.set_page_config(
@@ -38,141 +37,35 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-#Blue Alliance API Parsing
-tba = tbapy.TBA('kDUcdEfvMKYdouPPg0d9HudlOZ19GLwBBOH3CZuXMjMf7XITviY1eJrSs1jkrOYX')
-
-def getinfo(t, yearlist, curyear):
-    team = tba.team(t)
-    years = tba.team_years(t)
-    years = set(years).intersection(set(yearlist))
-    for y in years:
-        print(y)
-        events = tba.team_events(t, y)
-        awards = tba.team_awards(t, y)
-        matches = tba.team_matches(t, year=y)
-        print('team was active during %s years.' % years)
-        print('In %d, team was in %d events: %s.' % (y, len(events), ', '.join(event.event_code for event in events)))
-        print('In %d, team won %d awards, award list: %s.' % (y, len(awards), ",".join('%s (%s)' % (award.name, award.event_key) for award in awards)))
-        #print('In %d, team match results are: %s.' % (y, ",".join(matches)))
-        print()
-
-def getscoreinfo(t, y, events):
-    d = {}
-    for event in events:
-        matches = tba.team_matches(team="frc"+str(t), year=y)
-        score = []
-        for alliance in matches:
-            blue_score = alliance['alliances']['blue']['score']
-            blue_teams = alliance['alliances']['blue']['team_keys']
-            red_score = alliance['alliances']['red']['score']
-            red_teams = alliance['alliances']['red']['team_keys']
-            eventChosen = alliance['event_key']
-
-            teamcode = "frc"+str(t)
-            if eventChosen == (str(y) + event):
-                if teamcode in blue_teams:
-                    score.append(blue_score)                
-                else:
-                    score.append(red_score)
-        d[event] = score
-    return d
-
-
-def getscoreinfoNew(t, y, events):
-    d = {}
-    for event in events:
-        try:
-            matches = tba.team_matches(team="frc"+str(t), year=y)
-            playoffs = tba.event_predictions(str(y) + event)["match_predictions"]["playoff"]
-            quals = tba.event_predictions(str(y) + event)["match_predictions"]["qual"]
-            scorePrd = [[],[]]
-            for alliance in matches:
-                blue_score = alliance['alliances']['blue']['score']
-                blue_teams = alliance['alliances']['blue']['team_keys']
-                red_score = alliance['alliances']['red']['score']
-                red_teams = alliance['alliances']['red']['team_keys']
-                eventChosen = alliance['event_key']
-
-                teamcode = "frc"+str(t)
-                if eventChosen == (str(y) + event):
-                    if teamcode in blue_teams:
-                        scorePrd[0].append(blue_score)
-                        for keys in playoffs:
-                            if(keys == alliance['key']):
-                                scorePrd[1].append(playoffs[keys]["blue"]["score"])
-                        for keys in quals:
-                            if(keys == alliance['key']):
-                                scorePrd[1].append(quals[keys]["blue"]["score"])
-                    else:
-                        scorePrd[0].append(red_score)
-                        for keys in playoffs:
-                            if(keys == alliance['key']):
-                                scorePrd[1].append(playoffs[keys]["red"]["score"])
-                        for keys in quals:
-                            if(keys == alliance['key']):
-                                scorePrd[1].append(quals[keys]["red"]["score"])
-        except:
-            st.error("No data for this event. Try a different event.")
-            st.stop()
-        d[event] = scorePrd
-    return d
-
-def getTeamEvents(team, yr):
-    e = []
-    evs = tba.team_events("frc"+str(team), yr)
-    for evnts in evs:
-        e.append(evnts.event_code)
-    return e
-
-
-def getTeamYears(team):
-    return tba.team_years("frc"+str(team))
-
-def getTeamData(team, year, events):
-    evscr = getscoreinfo(team, year, events)
-    data = {}
-    for key, scores in evscr.items():
-        try:
-            q1 = np.percentile(scores, 25)
-            median = np.percentile(scores, 50)
-            q3 = np.percentile(scores, 75)
-            minimum = np.min(scores)
-            maximum = np.max(scores)
-            data.update({key:[q1, median, q3, minimum, maximum]})
-        except:
-            st.error("No data. Try a different year.")
-            st.stop()
-    return data
-
-def checkTeamValidity(team):
-    allteams = np.load("teamnumbers.npy")
-    if team in allteams:
-        return True
-    return False
 
 #Input
-st.sidebar.title("Select Team")
+st.sidebar.title("Requirement Weighting")
+
+atts = ["Speaker notes during auton", "Amplified speaker notes during teleop", "Total speaker notes during teleop", "Amp notes during auton", "Amp notes during teleop", "Total drops", "Spotlight", "Buddy Climb", "Trap", "Onstage"]
+#    total speaker notes auton (integer); amplified note (integer); total speaker notes teleop (integer); amp notes auton (integer); amp notes teleop (integer); drop/fail (integer); spotlight (bool); buddy climb (bool); trap (bool); onstage (bool)
+
+with st.sidebar:
+    attributes = st.multiselect("Which attributes do you want to utilize?", atts, [])
 
 class SideBarSetup:
     def bar(self):
         st.sidebar.header("----------")
+        
+    def attribute(self, c):
+        with st.sidebar:
+            attributes = st.multiselect("Which attributes do you want to utilize?", atts, [])
+        return attributes
     
     def tmnumIN(self, a):
         with st.sidebar:
             t = st.text_input("Team Number", "649", key = "teamname " + str(a), placeholder = "649")
         return t
 
-    def tmyrIN(self, b, t):
-        with st.sidebar:
-            tmyrs = getTeamYears(t)
-            tmy = st.selectbox("Which year do you want to check", tmyrs, key = "teamyrs " + str(b))
-        return tmy
-
-    def tmyrevIN(self, c, t, y):
-        with st.sidebar:
-            tyevents = getTeamEvents(t, y)
-            evnt = st.multiselect("Which events do you want to compare", tyevents, [], key = "teamevent " + str(c))
-        return evnt
+    #def tmyrIN(self, b, t):
+        #with st.sidebar:
+            #tmyrs = getTeamYears(t)
+            #tmy = st.selectbox("Which year do you want to check", tmyrs, key = "teamyrs " + str(b))
+        #return tmy
 
 def basicTeamBoxPlot(tmevscr):
     #Charts
@@ -192,91 +85,6 @@ def basicTeamBoxPlot(tmevscr):
     # Display the boxplot
     st.altair_chart(boxplot, use_container_width=True)
     
-    
-def individualTeamScatterPlot(scores_data):
-    
-    for event, scores in scores_data.items():
-        st.write("Event: ", event)
-        min_length = min(len(scores[0]), len(scores[1]))
-    
-        matchnames, alliances = getEventAlliances(tm, tmy, event)
-        # Prepare data for scatter plot
-        data = pd.DataFrame({
-          'Match': range(1, min_length + 1),
-          'Actual Score': scores[0][:min_length],
-          'Predicted Score': scores[1][:min_length],
-          'Match Name': matchnames,
-          'Alliance': alliances
-        })
-        
-        # Create scatter plot
-        #data = pd.DataFrame({'Match': range(1, len(scores) + 1), 'Points Scored': scores})
-
-        scatter_plot_1 = alt.Chart(data).mark_circle(size=60).encode(
-            alt.X("Match:N", axis=alt.Axis(labels=True, ticks=True, domain=True, grid=True, domainColor="white", gridColor="white", labelColor="black", tickColor="white", titleColor="black")),
-            alt.Y("Actual Score:Q", axis=alt.Axis(labels=True, ticks=True, domain=True, grid=True, domainColor="white", gridColor="white", labelColor="black", tickColor="white", titleColor="black")).scale(zero=False),
-            color = alt.value("blue"),
-            tooltip = ['Match', 'Match Name', 'Actual Score', 'Alliance'] 
-            #alt.Color("variable:N", legend=alt.Legend(title="Score Type")),
-            ).properties(
-                width=200,
-                height=300
-            )#.configure_legend(
-             #   orient='right'
-            #)
-        
-        scatter_plot_2 = alt.Chart(data).mark_circle(size=60).encode(
-            alt.X("Match:N", axis=alt.Axis(labels=True, ticks=True, domain=True, grid=True, domainColor="white", gridColor="white", labelColor="black", tickColor="white", titleColor="black")),
-            alt.Y("Predicted Score:Q", axis=alt.Axis(labels=True, ticks=True, domain=True, grid=True, domainColor="white", gridColor="white", labelColor="black", tickColor="white", titleColor="black")).scale(zero=False),
-            color = alt.value("orange"),
-            tooltip = ['Match', 'Match Name', 'Predicted Score', 'Alliance'] 
-            #alt.Color("variable:N", legend=alt.Legend(title="Score Type")),
-            ).properties(
-                width=200,
-                height=300
-            )
-            #.configure_legend(
-            #    orient='right'
-            #)
-
-        # Combine scatter plot and line of best fit
-        #line_of_fit = scatter_plot.transform_regression('Match','Points Scored').mark_line()
-        
-        combined_chart = scatter_plot_2 + scatter_plot_1
-
-        # Display the chart
-        st.altair_chart(combined_chart, use_container_width=True)
-        #st.altair_chart(scatter_plot_2, use_container_width=True)
-
-def getEventAlliances(t, y, event):
-    matches = tba.team_matches(team="frc"+str(t), year=y)
-    matchnames = []
-    alliances = []
-    for alliance in matches:
-        blue_score = alliance['alliances']['blue']['score']
-        blue_teams = alliance['alliances']['blue']['team_keys']
-        red_score = alliance['alliances']['red']['score']
-        red_teams = alliance['alliances']['red']['team_keys']
-        eventChosen = alliance['event_key']
-        matchNumber = alliance['key']
-        teamcode = "frc"+str(t)
-        #print(eventChosen, str(y) + event)
-        #print(teamcode)
-
-        if eventChosen == (str(y) + event):
-            matchnames.append(matchNumber.split("_")[1])
-            print(matchNumber.split("_")[1])
-            if teamcode in blue_teams:
-                alliances.append(blue_teams)
-                print(blue_teams)
-            else:
-                alliances.append(red_teams)
-                print(red_teams)
-    return matchnames, alliances
-
-tba = tbapy.TBA('kDUcdEfvMKYdouPPg0d9HudlOZ19GLwBBOH3CZuXMjMf7XITviY1eJrSs1jkrOYX')
-
-# Add teams dynamically
 teams_info = []
 sblist = []
 sb0 = SideBarSetup()
