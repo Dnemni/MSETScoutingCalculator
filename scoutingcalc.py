@@ -47,6 +47,8 @@ atts = ["Speaker notes during auton", "Amplified speaker notes during teleop", "
 with st.sidebar:
     attributes = st.multiselect("Which attributes do you want to utilize?", atts, [])
 
+st.write(attributes)
+
 class SideBarSetup:
     def bar(self):
         st.sidebar.header("----------")
@@ -60,12 +62,16 @@ class SideBarSetup:
 sblist = []
 weightages = []
 for x in range (attributes.count):
+    st.write(x)
     globals()["sb" + str(x)] = SideBarSetup()
     if(x>0):
         globals()["sb" + str(x)].bar()
     globals()["wt" + str(x)] = globals()["sb" + str(x)].getWeight(x, x)
     weightages.append((attributes[x], globals()["wt" + str(x)]))
+    st.write(weightages)
     sblist.append(globals()["sb" + str(x)])
+
+st.write(weightages)
 
 
 """
