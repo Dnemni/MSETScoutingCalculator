@@ -6,12 +6,12 @@ import datetime
 
 st.set_page_config(
     page_title="MSET Scouting Calculator",
-    page_icon=":calc:",  # You can use any emoji as an icon
+    page_icon="📱",  # You can use any emoji as an icon
     layout="centered",
     initial_sidebar_state="expanded",
 )
 
-st.title("MSET Scouting Data Visualizer")
+st.title("MSET Scouting Calculator")
 
 # Set theme
 theme = {
