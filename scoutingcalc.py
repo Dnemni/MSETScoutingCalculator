@@ -60,8 +60,6 @@ sblist = []
 weightages = []
 for x in range (len(attributes)):
     globals()["sb" + str(x)] = SideBarSetup()
-    if(x>0):
-        globals()["sb" + str(x)].bar()
     globals()["wt" + str(x)] = globals()["sb" + str(x)].getWeight(x, x)
     weightages.append((attributes[x], globals()["wt" + str(x)]))
     sblist.append(globals()["sb" + str(x)])
