@@ -51,22 +51,24 @@ class SideBarSetup:
     def bar(self):
         st.sidebar.header("----------")
         
-    def attribute(self, c):
+    def getWeight(self, i, a):
         with st.sidebar:
-            attributes = st.multiselect("Which attributes do you want to utilize?", atts, [])
-        return attributes
+            weight = st.number_input("What weightage should" + attributes[i] + "have?", key = "attname " + str(a), placeholder = "100")
+        return weight
     
-    def tmnumIN(self, a):
-        with st.sidebar:
-            t = st.text_input("Team Number", "649", key = "teamname " + str(a), placeholder = "649")
-        return t
-"""
-    def tmyrIN(self, b, t):
-        with st.sidebar:
-            tmyrs = getTeamYears(t)
-            tmy = st.selectbox("Which year do you want to check", tmyrs, key = "teamyrs " + str(b))
-        return tmy
 
+sblist = []
+weightages = []
+for x in range (attributes.count):
+    globals()["sb" + str(x)] = SideBarSetup()
+    if(x>0):
+        globals()["sb" + str(x)].bar()
+    globals()["wt" + str(x)] = globals()["sb" + str(x)].getWeight(x, x)
+    weightages.append((attributes[x], globals()["wt" + str(x)]))
+    sblist.append(globals()["sb" + str(x)])
+
+
+"""
 def basicTeamBoxPlot(tmevscr):
     #Charts
     df = pd.DataFrame([(event, score) for event, scores in tmevscr.items() for score in scores], columns=['Event', 'Points Scored'])
