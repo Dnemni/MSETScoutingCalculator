@@ -5,8 +5,8 @@ import streamlit as st
 import datetime
 
 st.set_page_config(
-    page_title="MSET Scouting Data Visualizer",
-    page_icon=":chart:",  # You can use any emoji as an icon
+    page_title="MSET Scouting Calculator",
+    page_icon=":calc:",  # You can use any emoji as an icon
     layout="centered",
     initial_sidebar_state="expanded",
 )
@@ -50,9 +50,6 @@ with st.sidebar:
 st.write(attributes)
 
 class SideBarSetup:
-    def bar(self):
-        st.sidebar.header("----------")
-        
     def getWeight(self, i, a):
         with st.sidebar:
             weight = st.number_input("What weightage should" + attributes[i] + "have?", key = "attname " + str(a), placeholder = "100")
@@ -62,17 +59,15 @@ class SideBarSetup:
 sblist = []
 weightages = []
 for x in range (len(attributes)):
-    st.write(x)
     globals()["sb" + str(x)] = SideBarSetup()
     if(x>0):
         globals()["sb" + str(x)].bar()
     globals()["wt" + str(x)] = globals()["sb" + str(x)].getWeight(x, x)
     weightages.append((attributes[x], globals()["wt" + str(x)]))
-    st.write(weightages)
     sblist.append(globals()["sb" + str(x)])
 
-st.write(weightages)
 
+st.header("")
 
 """
 def basicTeamBoxPlot(tmevscr):
