@@ -61,7 +61,7 @@ class SideBarSetup:
 
 sblist = []
 weightages = []
-for x in range (attributes.count()):
+for x in range (len(attributes)):
     st.write(x)
     globals()["sb" + str(x)] = SideBarSetup()
     if(x>0):
