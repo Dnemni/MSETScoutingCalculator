@@ -91,6 +91,7 @@ for col, rank in zip(data.columns[4:], weighted_ranks):
 
 # Display the updated DataFrame
 st.dataframe(rank_data)
+st.dataframe(data)
 
 """
 st.header("Ranked Table")
