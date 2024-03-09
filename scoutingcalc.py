@@ -67,9 +67,20 @@ for x in range (len(attributes)):
 
 st.header("Ranked Table")
 
-data = pd.read_csv("MOCK_DATA.csv")
+def wtRank(thisAtt, thisCol):
+    for wt, desAtt in thisAtt:
+        rank =  thisCol * wt
+    return rank
+            
 
-#def calcRank:
-#    abc=0
+data = pd.read_csv("MOCK_DATA.csv")
+rank_data = pd.DataFrame(df["name"],df["match_number"], df["team_number"], df["color"])
+for col in data.columns[4:]:
+    rank_data[col] = data[col].rank(ascending = false)
+    rank_data["New_" + col] = wtRank(attributes[0], rank_data[col])
+    
+st.write(rank_data)
+
+#(21-rank_data["ground_pickup_auton"][1])*wt
 
 st.dataframe(data)
