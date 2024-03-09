@@ -79,7 +79,7 @@ for col in data.columns[4:]:
     rank_data[col] = data[col].rank(ascending = false)
     rank_data["New_" + col] = wtRank(attributes[0], rank_data[col])
     
-st.write(rank_data)
+st.dataframe(rank_data)
 
 #(21-rank_data["ground_pickup_auton"][1])*wt
 
