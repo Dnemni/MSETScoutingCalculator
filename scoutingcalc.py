@@ -74,9 +74,9 @@ def wtRank(thisAtt, thisCol):
             
 
 data = pd.read_csv("MOCK_DATA.csv")
-rank_data = pd.DataFrame(df["name"],df["match_number"], df["team_number"], df["color"])
+rank_data = pd.DataFrame(data["name"],data["match_number"], data["team_number"], data["color"])
 for col in data.columns[4:]:
-    rank_data[col] = data[col].rank(ascending = false)
+    rank_data[col] = data[col].rank(ascending = False)
     rank_data["New_" + col] = wtRank(attributes[0], rank_data[col])
     
 st.dataframe(rank_data)
