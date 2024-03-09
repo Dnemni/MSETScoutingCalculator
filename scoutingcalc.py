@@ -41,7 +41,7 @@ st.markdown(
 #Input
 st.sidebar.title("Requirement Weighting")
 
-atts = ["Speaker notes during auton", "Amplified speaker notes during teleop", "Total speaker notes during teleop", "Amp notes during auton", "Amp notes during teleop", "Drops/Fails", "Blocked Shots", "Times Blocked", "Total Fails (Drops + Blocks)", "Spotlight", "Buddy Climb", "Trap", "Onstage"]
+atts = ["speaker_notes_no_amp_auton", "amplified_note", "total_speaker_notes_teleop", "amp_notes_auton", "amp_notes_teleop", "drop_fail", "blocked_shots", "times_they_blocked", "total_fails", "spotlight", "buddy_climb", "trap", "onstage"]
 #    total speaker notes auton (integer); amplified note (integer); total speaker notes teleop (integer); amp notes auton (integer); amp notes teleop (integer); drop/fail (integer); spotlight (bool); buddy climb (bool); trap (bool); onstage (bool)
 
 with st.sidebar:
