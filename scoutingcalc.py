@@ -65,6 +65,34 @@ for x in range (len(attributes)):
     sblist.append(globals()["sb" + str(x)])
 
 
+def calculate_weighted_rank(row, attributes, weights):
+    rank = sum(row[attr] * weight for attr, weight in zip(attributes, weights))
+    return rank
+
+# Assuming 'data' is your DataFrame containing team data
+data = pd.read_csv("MOCK_DATA.csv")
+
+# Calculate ranks for each team based on provided attributes and weights
+rank_data = data.copy()
+for col in data.columns[4:]:
+    rank_data[col + '_rank'] = rank_data[col].rank(ascending=False)
+
+# Calculate weighted ranks for each team
+weighted_ranks = []
+for index, row in rank_data.iterrows():
+    weighted_rank = calculate_weighted_rank(row, attributes, weightages)
+    weighted_ranks.append(weighted_rank)
+
+# Add a new row to the DataFrame containing calculated weighted ranks for all teams
+rank_data.loc['Weighted Rank'] = [np.nan] * len(rank_data.columns)
+rank_data.loc['Weighted Rank', 'name'] = 'All Teams'
+for col, rank in zip(data.columns[4:], weighted_ranks):
+    rank_data.loc['Weighted Rank', col + '_rank'] = rank
+
+# Display the updated DataFrame
+st.dataframe(rank_data)
+
+"""
 st.header("Ranked Table")
 
 def wtRank(thisAtt, thisCol):
@@ -85,3 +113,4 @@ st.dataframe(rank_data)
 #(21-rank_data["ground_pickup_auton"][1])*wt
 
 st.dataframe(data)
+"""
