@@ -66,7 +66,7 @@ for x in range (len(attributes)):
 
 
 def calculate_weighted_rank(row, attributes, weights):
-    rank = sum(row[attr] * weight for attr, weight in zip(attributes, weights))
+    rank = sum(row[attr] * weight if attr in row.index else 0 for attr, weight in zip(attributes, weights))
     return rank
 
 # Assuming 'data' is your DataFrame containing team data
