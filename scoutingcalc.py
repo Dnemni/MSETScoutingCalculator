@@ -76,6 +76,7 @@ for attribute, weight in weightages:
 
 # Display the updated DataFrame
 st.dataframe(rank_data)
+st.dataframe(data)
 
 """
 st.header("Ranked Table")
