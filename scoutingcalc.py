@@ -75,7 +75,7 @@ rank_data = pd.DataFrame(data["name"])
 # Calculate rankings for each attribute and add them to rank_data
 for attribute, weight in weightages:
     rank_data[attribute + '_rank'] = data[attribute].rank(ascending=False)
-    st.write(data[attribute].rank(ascending=False))
+    st.write(data[attribute].rank(ascending=False, method = "max"))
 
 # Display the updated DataFrame
 st.dataframe(rank_data)
