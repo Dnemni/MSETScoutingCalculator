@@ -64,15 +64,18 @@ for x in range (len(attributes)):
     weightages.append((attributes[x], globals()["wt" + str(x)]))
     sblist.append(globals()["sb" + str(x)])
 
+st.write(weightages)
+
 # Assuming 'data' is your DataFrame containing team data
 data = pd.read_csv("MOCK_DATA.csv")
 
 # Initialize an empty DataFrame to store the rankings
-rank_data = pd.DataFrame(columns=['name'])
+rank_data = pd.DataFrame(data["name"])
 
 # Calculate rankings for each attribute and add them to rank_data
 for attribute, weight in weightages:
     rank_data[attribute + '_rank'] = data[attribute].rank(ascending=False)
+    st.write(data[attribute].rank(ascending=False))
 
 # Display the updated DataFrame
 st.dataframe(rank_data)
