@@ -74,12 +74,13 @@ rank_data = pd.DataFrame(data["name"])
 
 # Calculate rankings for each attribute and add them to rank_data
 for attribute, weight in weightages:
-    rank_data[attribute + '_rank'] = data[attribute].rank(ascending=False)
-    st.write(data[attribute].rank(ascending=False, method = "max"))
+    rank_data[attribute + '_rank'] = (data[attribute].rank(ascending=False, method = "min"))
+    rank_data[attribute + '_rank'] = 51 - rank_data[attribute + '_rank']
+    rank_data[attribute + '_rank'] = rank_data[attribute + '_rank']*weight
 
 # Display the updated DataFrame
-st.dataframe(rank_data)
-st.dataframe(data)
+for row in rank_data.rows[1:]:
+    data["rank"] = 
 
 """
 st.header("Ranked Table")
