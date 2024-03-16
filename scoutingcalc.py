@@ -84,8 +84,8 @@ for attribute, weight in weightages:
 st.dataframe(rank_data)
 
 # Display the updated DataFrame
-for row in rank_data.rows[1:]:
-    data["rank"] = 
+#for row in rank_data.rows[1:]:
+#    data["rank"] = 
 
 """
 st.header("Ranked Table")
