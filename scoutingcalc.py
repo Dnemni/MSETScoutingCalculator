@@ -68,15 +68,20 @@ st.write(weightages)
 
 # Assuming 'data' is your DataFrame containing team data
 data = pd.read_csv("MOCK_DATA.csv")
+st.dataframe(data)
 
 # Initialize an empty DataFrame to store the rankings
 rank_data = pd.DataFrame(data["name"])
+st.dataframe(rank_data)
 
 # Calculate rankings for each attribute and add them to rank_data
 for attribute, weight in weightages:
     rank_data[attribute + '_rank'] = (data[attribute].rank(ascending=False, method = "min"))
-    rank_data[attribute + '_rank'] = 51 - rank_data[attribute + '_rank']
+    rank_data[attribute + '_rank'] = len(rank_data[attribute + '_rank']) + 1 - rank_data[attribute + '_rank']
+    st.write(rank_data[attribute + '_rank'])
     rank_data[attribute + '_rank'] = rank_data[attribute + '_rank']*weight
+
+st.dataframe(rank_data)
 
 # Display the updated DataFrame
 for row in rank_data.rows[1:]:
