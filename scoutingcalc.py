@@ -71,7 +71,7 @@ rank_data = pd.DataFrame(data["scoutName"])
 
 
 # Calculate rankings for each attribute and add them to rank_data
-for attribute, weight in weightages:
+for attribute in atts:
     rank_data[attribute + '_rank'] = (data[attribute].rank(ascending=False, method = "min"))
     rank_data[attribute + '_rank'] = len(rank_data[attribute + '_rank']) + 1 - rank_data[attribute + '_rank']
     rank_data[attribute + '_rank'] = rank_data[attribute + '_rank']*weight
