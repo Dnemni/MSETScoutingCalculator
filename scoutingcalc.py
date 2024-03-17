@@ -69,8 +69,6 @@ data = pd.read_csv("DATA.csv")
 # Initialize an empty DataFrame to store the rankings
 rank_data = pd.DataFrame(data["scoutName"])
 
-st.dataframe(data)
-st.dataframe(rank_data)
 
 # Calculate rankings for each attribute and add them to rank_data
 for attribute, weight in weightages:
@@ -89,27 +87,5 @@ for ind in rank_data.index:
     data.loc[ind, "rank"] = rank
     rank = 0
 
-st.dataframe(data)
-
-"""
-st.header("Ranked Table")
-
-def wtRank(thisAtt, thisCol):
-    for wt, desAtt in thisAtt:
-        rank =  thisCol * wt
-    return rank
-            
-
-data = pd.read_csv("MOCK_DATA.csv")
-rank_data = pd.DataFrame(data["name"])
-#,data["match_number"], data["team_number"], data["color"]
-for col in data.columns[4:]:
-    rank_data[col] = data[col].rank(ascending = False)
-    rank_data["New_" + col] = wtRank(attributes[0], rank_data[col])
-    
 st.dataframe(rank_data)
-
-#(21-rank_data["ground_pickup_auton"][1])*wt
-
 st.dataframe(data)
-"""
