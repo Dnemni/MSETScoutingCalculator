@@ -74,7 +74,7 @@ rank_data = pd.DataFrame(data["scoutName"])
 for attribute in atts:
     rank_data[attribute + '_rank'] = (data[attribute].rank(ascending=False, method = "min"))
     rank_data[attribute + '_rank'] = len(rank_data[attribute + '_rank']) + 1 - rank_data[attribute + '_rank']
-    rank_data[attribute + '_rank'] = rank_data[attribute + '_rank']*weight
+    #rank_data[attribute + '_rank'] = rank_data[attribute + '_rank']*weight
 
 
 # Display the updated DataFrame
@@ -83,7 +83,8 @@ data["rank"] = 0
 for ind in rank_data.index:
     for attribute, weight in weightages:
         item = rank_data.loc[ind, attribute + '_rank']
-        rank += item
+        itmwt = item * weight
+        rank += itmwt
     data.loc[ind, "rank"] = rank
     rank = 0
 
