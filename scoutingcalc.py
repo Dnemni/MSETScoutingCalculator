@@ -78,11 +78,12 @@ for attribute, weight in weightages:
 
 # Display the updated DataFrame
 rank = 0
-for row in rank_data.rows[1:]:
-    for item in rank_data:
+for ind in rank_data.index[1:]:
+    for attribute, weight in weightages:
+        item = rank_data[attribute][ind]
         if(isinstance(item, int)):
             rank += item
-    data["rank"] = rank
+    data["rank"][ind] = rank
     rank = 0
 
 st.dataframe(data)
