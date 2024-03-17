@@ -67,7 +67,7 @@ for x in range (len(attributes)):
 data = pd.read_csv("DATA.csv")
 
 # Initialize an empty DataFrame to store the rankings
-rank_data = pd.DataFrame(data["name"])
+rank_data = pd.DataFrame(data["scoutName"])
 
 # Calculate rankings for each attribute and add them to rank_data
 for attribute, weight in weightages:
