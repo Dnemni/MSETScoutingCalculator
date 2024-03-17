@@ -41,19 +41,18 @@ st.markdown(
 #Input
 st.sidebar.title("Requirement Weighting")
 
-atts = ["speaker_notes_no_amp_auton", "amplified_note", "total_speaker_notes_teleop", "amp_notes_auton", "amp_notes_teleop", "drop_fail", "blocked_shots", "times_they_blocked", "total_fails", "spotlight", "buddy_climb", "trap", "onstage"]
-#    total speaker notes auton (integer); amplified note (integer); total speaker notes teleop (integer); amp notes auton (integer); amp notes teleop (integer); drop/fail (integer); spotlight (bool); buddy climb (bool); trap (bool); onstage (bool)
+atts = ["ampsFailedAuton", "ampsFailedTeleop", "ampsScoredAuton", "ampsScoredTeleop", "groundAuton", "groundTeleop", "speakersFailedAuton", "speakersFailedTeleop", "speakersScoredAuton", "speakersScoredTeleop"]
+
 
 with st.sidebar:
     attributes = st.multiselect("Which attributes do you want to utilize?", atts, [])
-
-st.write(attributes)
+    
 
 class SideBarSetup:
     def getWeight(self, i, a):
         with st.sidebar:
             weight = st.number_input("What weightage should" + attributes[i] + "have?", key = "attname " + str(a), placeholder = "100")
-        return weight
+        return weight/100
     
 
 sblist = []
@@ -64,28 +63,29 @@ for x in range (len(attributes)):
     weightages.append((attributes[x], globals()["wt" + str(x)]))
     sblist.append(globals()["sb" + str(x)])
 
-st.write(weightages)
-
 # Assuming 'data' is your DataFrame containing team data
-data = pd.read_csv("MOCK_DATA.csv")
-st.dataframe(data)
+data = pd.read_csv("DATA.csv")
 
 # Initialize an empty DataFrame to store the rankings
 rank_data = pd.DataFrame(data["name"])
-st.dataframe(rank_data)
 
 # Calculate rankings for each attribute and add them to rank_data
 for attribute, weight in weightages:
     rank_data[attribute + '_rank'] = (data[attribute].rank(ascending=False, method = "min"))
     rank_data[attribute + '_rank'] = len(rank_data[attribute + '_rank']) + 1 - rank_data[attribute + '_rank']
-    st.write(rank_data[attribute + '_rank'])
     rank_data[attribute + '_rank'] = rank_data[attribute + '_rank']*weight
 
-st.dataframe(rank_data)
 
 # Display the updated DataFrame
-#for row in rank_data.rows[1:]:
-#    data["rank"] = 
+rank = 0
+for row in rank_data.rows[1:]:
+    for item in rank_data:
+        if(isinstance(item, int)):
+            rank += item
+    data["rank"] = rank
+    rank = 0
+
+st.dataframe(data)
 
 """
 st.header("Ranked Table")
