@@ -78,7 +78,7 @@ for attribute, weight in weightages:
 
 # Display the updated DataFrame
 rank = 0
-data["rank"] = []
+data["rank"] = 0
 for ind in rank_data.index[1:]:
     for attribute, weight in weightages:
         item = rank_data[attribute][ind]
