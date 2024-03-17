@@ -85,9 +85,7 @@ data["rank"] = 0
 for ind in rank_data.index:
     for attribute, weight in weightages:
         item = rank_data.loc[ind, attribute + '_rank']
-        st.write(item)
-        if(isinstance(item, int)):
-            rank += item
+        rank += item
     data.loc[ind, "rank"] = rank
     rank = 0
 
