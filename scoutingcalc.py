@@ -84,7 +84,7 @@ for ind in rank_data.index[1:]:
         item = rank_data[attribute][ind]
         if(isinstance(item, int)):
             rank += item
-    data["rank"][ind] = rank
+    df.loc[ind, "rank"] = rank
     rank = 0
 
 st.dataframe(data)
